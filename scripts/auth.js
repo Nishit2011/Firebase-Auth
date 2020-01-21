@@ -5,16 +5,19 @@ auth.onAuthStateChanged(user => {
   if (user) {
     console.log("user logged in:", user);
     //getting collections from firebase firestore only when the user is logged in
-    db.collection("guides")
-      .onSnapshot(snapshot => {
+    db.collection("guides").onSnapshot(
+      snapshot => {
         //passing each document to a function
         setupGuides(snapshot.docs);
 
         //passing user details to below function
         //where links on nav bar will be hidden or shown based on the status of user login
         setupUI(user);
-      })
-      .catch(err => err.message);
+      },
+      err => {
+        console.log(err.message);
+      }
+    );
   } else {
     console.log("user logged out");
     //when not logged in, passing empty array as the data to the dom
@@ -60,14 +63,27 @@ signupForm.addEventListener("submit", e => {
   console.log(email, password);
 
   //signup the user
-  auth.createUserWithEmailAndPassword(email, password).then(cred => {
-    //console.log(cred);
-    const modal = document.querySelector("#modal-signup");
+  //when the user is successfully created or signed up, credentials with user data is returned back
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(cred => {
+      //using doc method to create a document with specific user id and a field bio
+      //add method will create a document with a random id hence doc method
+      return db
+        .collection("users")
+        .doc(cred.user.uid)
+        .set({
+          bio: signupForm["signup-bio"].value
+        });
+      //console.log(cred);
+    })
+    .then(() => {
+      const modal = document.querySelector("#modal-signup");
 
-    //will close the sign up modal window after the creds are entered
-    M.Modal.getInstance(modal).close();
-    signupForm.reset();
-  });
+      //will close the sign up modal window after the creds are entered
+      M.Modal.getInstance(modal).close();
+      signupForm.reset();
+    });
 });
 
 //logout

@@ -5,11 +5,17 @@ const accountDetails = document.querySelector(".account-details");
 const setupUI = user => {
   if (user) {
     //adding account info to the account detail modal when the user is logged in
-    const html = `
-    <div>Logged in as ${user.email}</div>
-    `;
+    db.collection("users")
+      .doc(user.uid)
+      .get()
+      .then(doc => {
+        const html = `
+        <div>Logged in as ${user.email}</div>
+        <div>${doc.data().bio}</div>
+        `;
+        accountDetails.innerHTML = html;
+      });
 
-    accountDetails.innerHTML = html;
     //toggle UI elements
     loggedInLinks.forEach(item => (item.style.display = "block"));
     loggedOutLinks.forEach(item => (item.style.display = "none"));
