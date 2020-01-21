@@ -1,3 +1,13 @@
+//getting collections from firebase firestore
+db.collection("guides")
+  .get()
+  .then(snapshot => {
+    console.log(snapshot.docs);
+
+    //passing each document to a function
+    setupGuides(snapshot.docs);
+  });
+
 //listen for auth status changes
 //everytime a user logs in or logs out, this method is fired
 auth.onAuthStateChanged(user => {
