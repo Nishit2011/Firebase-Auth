@@ -5,6 +5,13 @@ admin.initializeApp();
 
 //function to be called from frontend
 exports.addAdminRole = functions.https.onCall((data, context) => {
+  //checking that Only admins are authorised to make other users as admin
+  //or checking if the user invoking this function is an admin
+
+  if (context.auth.token.admin !== true) {
+    return { error: "Only admins can add other admins" };
+  }
+
   //get user and add custom claim (admin)
   return admin
     .auth()

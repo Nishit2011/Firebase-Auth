@@ -31,3 +31,7 @@ match /users/{userId}{
 allow create: if request.auth.uid !=null
 allow read: if request.auth.uid == userId
 }
+
+##################################################
+
+Only admins can write new guides
