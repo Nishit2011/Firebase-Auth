@@ -1,13 +1,21 @@
 const guidelist = document.querySelector(".guides");
 const loggedOutLinks = document.querySelectorAll(".logged-out");
 const loggedInLinks = document.querySelectorAll(".logged-in");
-
+const accountDetails = document.querySelector(".account-details");
 const setupUI = user => {
   if (user) {
+    //adding account info to the account detail modal when the user is logged in
+    const html = `
+    <div>Logged in as ${user.email}</div>
+    `;
+
+    accountDetails.innerHTML = html;
     //toggle UI elements
     loggedInLinks.forEach(item => (item.style.display = "block"));
     loggedOutLinks.forEach(item => (item.style.display = "none"));
   } else {
+    //hiding account detail info when the user is not logged in
+    accountDetails.innerHTML = "";
     //toggle UI elements
 
     loggedOutLinks.forEach(item => (item.style.display = "block"));

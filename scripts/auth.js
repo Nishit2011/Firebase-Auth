@@ -6,14 +6,15 @@ auth.onAuthStateChanged(user => {
     console.log("user logged in:", user);
     //getting collections from firebase firestore only when the user is logged in
     db.collection("guides")
-    .onSnapshot(snapshot => {
-      //passing each document to a function
-      setupGuides(snapshot.docs);
+      .onSnapshot(snapshot => {
+        //passing each document to a function
+        setupGuides(snapshot.docs);
 
-      //passing user details to below function
-      //where links on nav bar will be hidden or shown based on the status of user login
-      setupUI(user);
-    });
+        //passing user details to below function
+        //where links on nav bar will be hidden or shown based on the status of user login
+        setupUI(user);
+      })
+      .catch(err => err.message);
   } else {
     console.log("user logged out");
     //when not logged in, passing empty array as the data to the dom
