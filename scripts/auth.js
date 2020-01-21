@@ -43,6 +43,9 @@ createForm.addEventListener("submit", e => {
       //will close the sign up modal window after the creds are entered
       M.Modal.getInstance(modal).close();
       createForm.reset();
+    })
+    .catch(err => {
+      console.log(err.message);
     });
 });
 
