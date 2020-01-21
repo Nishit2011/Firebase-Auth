@@ -103,6 +103,10 @@ signupForm.addEventListener("submit", e => {
       //will close the sign up modal window after the creds are entered
       M.Modal.getInstance(modal).close();
       signupForm.reset();
+      signupForm.querySelector(".error").innerHTML = "";
+    })
+    .catch(err => {
+      signupForm.querySelector(".error").innerHTML = err.message;
     });
 });
 
@@ -122,10 +126,16 @@ loginForm.addEventListener("submit", e => {
   const email = loginForm["login-email"].value;
   const password = loginForm["login-password"].value;
 
-  auth.signInWithEmailAndPassword(email, password).then(cred => {
-    //close the login modal and reset the form
-    const modal = document.querySelector("#modal-login");
-    M.Modal.getInstance(modal).close();
-    loginForm.reset();
-  });
+  auth
+    .signInWithEmailAndPassword(email, password)
+    .then(cred => {
+      //close the login modal and reset the form
+      const modal = document.querySelector("#modal-login");
+      M.Modal.getInstance(modal).close();
+      loginForm.reset();
+      signupForm.querySelector(".error").innerHTML = "";
+    })
+    .catch(err => {
+      loginForm.querySelector(".error").innerHTML = err.message;
+    });
 });
