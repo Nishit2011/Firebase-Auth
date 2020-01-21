@@ -2,8 +2,15 @@ const guidelist = document.querySelector(".guides");
 const loggedOutLinks = document.querySelectorAll(".logged-out");
 const loggedInLinks = document.querySelectorAll(".logged-in");
 const accountDetails = document.querySelector(".account-details");
+const adminItems = document.querySelectorAll(".admin");
 const setupUI = user => {
   if (user) {
+    if (user.admin) {
+      //if the user is admin, all the items with admin class
+      //is made visible
+      adminItems.forEach(item => (item.style.display = "block"));
+    }
+
     //adding account info to the account detail modal when the user is logged in
     db.collection("users")
       .doc(user.uid)
@@ -12,6 +19,7 @@ const setupUI = user => {
         const html = `
         <div>Logged in as ${user.email}</div>
         <div>${doc.data().bio}</div>
+        <div class="pink-test">${user.admin ? "Admin" : ""}</div>
         `;
         accountDetails.innerHTML = html;
       });
@@ -24,6 +32,7 @@ const setupUI = user => {
     accountDetails.innerHTML = "";
     //toggle UI elements
 
+    adminItems.forEach(item => (item.style.display = "none"));
     loggedOutLinks.forEach(item => (item.style.display = "block"));
     loggedInLinks.forEach(item => (item.style.display = "none"));
   }

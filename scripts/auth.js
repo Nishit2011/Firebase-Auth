@@ -1,18 +1,38 @@
+// add admin cloud function
+const adminForm = document.querySelector(".admin-actions");
+adminForm.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const adminEmail = document.querySelector("#admin-email").value;
+  const addAdminRole = functions.httpsCallable("addAdminRole");
+  addAdminRole({ email: adminEmail }).then(result => {
+    console.log(result);
+  });
+});
+
 //listen for auth status changes
 //everytime a user logs in or logs out, this method is fired
 auth.onAuthStateChanged(user => {
   console.log(user);
   if (user) {
     console.log("user logged in:", user);
+
+    //accessing the claims which will be used to manage content
+    //so a user that was made admin will show true in this case
+    user.getIdTokenResult().then(idTokenResult => {
+      console.log(idTokenResult.claims);
+      user.admin = idTokenResult.claims.admin;
+
+      //passing user details to below function
+      //where links on nav bar will be hidden or shown based on the status of user login
+      setupUI(user);
+    });
+
     //getting collections from firebase firestore only when the user is logged in
     db.collection("guides").onSnapshot(
       snapshot => {
         //passing each document to a function
         setupGuides(snapshot.docs);
-
-        //passing user details to below function
-        //where links on nav bar will be hidden or shown based on the status of user login
-        setupUI(user);
       },
       err => {
         console.log(err.message);
